@@ -1,20 +1,6 @@
 import 'package:flutter/material.dart';
 
 class OrderItems extends StatelessWidget {
-  final popUp = List<PopupMenuEntry<dynamic>>()
-    ..add(PopupMenuItem(
-      child: Text('by modified time'),
-    ))
-    ..add(PopupMenuItem(
-      child: Text('by created time'),
-    ))
-    ..add(PopupMenuItem(
-      child: Text('A-Z'),
-    ))
-    ..add(PopupMenuItem(
-      child: Text('Z-A'),
-    ));
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -22,32 +8,65 @@ class OrderItems extends StatelessWidget {
       color: Colors.deepPurple[400],
       child: FlatButton(
           onPressed: () {},
-          child: PopupMenuButton(
-            tooltip: 'Sort by modified time',
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
+          child: Theme(
+            data: ThemeData(cardColor: Colors.black87),
+            child: PopupMenuButton(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Text(
+                        'Sort by modified time',
+                        style: TextStyle(
+                            fontFamily: 'Raleway',
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600),
+                      ),
+                      Icon(
+                        Icons.keyboard_arrow_down,
+                        color: Colors.white,
+                      ),
+                    ],
+                  )
+                ],
+              ),
+              itemBuilder: (context) {
+                return popupMenuBuilder(
+                  [
                     Text(
-                      'Sort by modified time',
-                      style: TextStyle(
-                          fontFamily: 'Raleway',
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600),
+                      'by modified time',
+                      style: TextStyle(color: Colors.white),
                     ),
-                    Icon(
-                      Icons.keyboard_arrow_down,
-                      color: Colors.white,
+                    Text(
+                      'by created time',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    Text(
+                      'A-Z',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    Text(
+                      'Z-A',
+                      style: TextStyle(color: Colors.white),
                     ),
                   ],
-                )
-              ],
+                );
+              },
             ),
-            itemBuilder: (context) {
-              return popUp;
-            },
           )),
     );
   }
+}
+
+List<PopupMenuEntry<dynamic>> popupMenuBuilder(List<Widget> items) {
+  List<PopupMenuEntry<dynamic>> popUp = List();
+
+  for (Widget item in items) {
+    popUp.add(PopupMenuItem(
+      child: item,
+    ));
+  }
+
+  return popUp;
 }
