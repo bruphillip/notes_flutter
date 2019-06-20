@@ -60,10 +60,10 @@ class OrderItems extends StatelessWidget {
 }
 
 List<PopupMenuEntry<dynamic>> popupMenuBuilder(List<Widget> items) {
-  List<PopupMenuEntry<dynamic>> popUp = List();
-
+  List<PopupMenuEntry<ValueKey<String>>> popUp = List();
   for (Widget item in items) {
     popUp.add(PopupMenuItem(
+      value: item.key,
       child: item,
     ));
   }
