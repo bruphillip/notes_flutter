@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notes/models/NoteEntity.dart';
 import 'package:notes/ui/components/ActionButton.dart';
 import 'package:notes/ui/components/NotesContainer.dart';
 
@@ -18,7 +19,11 @@ class Home extends StatelessWidget {
             margin: EdgeInsets.only(right: 20),
             child: Row(
               children: <Widget>[
-                ActionButton(onTap: () {}, icon: Icons.add_to_photos),
+                ActionButton(
+                    onTap: () {
+                      _handleAddNote(context);
+                    },
+                    icon: Icons.add_to_photos),
                 Padding(padding: EdgeInsets.only(right: 10, left: 10)),
                 ActionButton(onTap: () {}, icon: Icons.search),
               ],
@@ -28,5 +33,10 @@ class Home extends StatelessWidget {
       ),
       body: NotesContainer(),
     );
+  }
+
+  _handleAddNote(BuildContext context) {
+    var note = NoteEntity(isNew: true);
+    Navigator.of(context).pushNamed('/NotePage', arguments: note);
   }
 }

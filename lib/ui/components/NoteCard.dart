@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:notes/models/NoteEntity.dart';
-import 'package:notes/ui/screen/NotePage.dart';
 
 class NoteCard extends StatelessWidget {
   final NoteEntity note;
@@ -13,15 +13,7 @@ class NoteCard extends StatelessWidget {
     return FlatButton(
       splashColor: Colors.purpleAccent,
       onPressed: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (ctx) {
-                  return NotePage(
-                    note: note,
-                  );
-                },
-                settings: RouteSettings(name: '/NoteCard')));
+        Navigator.of(context).pushNamed('/NotePage', arguments: this.note);
       },
       padding: EdgeInsets.all(0),
       child: Container(
@@ -47,7 +39,7 @@ class NoteCard extends StatelessWidget {
                   fontWeight: FontWeight.w600),
             ),
             Text(
-              this.note.createdAt.toString(),
+              _dateFormmater(this.note.updatedAt),
               style: TextStyle(
                   color: Colors.white,
                   fontFamily: 'Raleway',
@@ -57,5 +49,10 @@ class NoteCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _dateFormmater(DateTime date) {
+    var formatter = new DateFormat('yMMMd');
+    return formatter.format(date);
   }
 }
