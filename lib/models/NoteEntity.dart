@@ -7,6 +7,8 @@ class NoteEntity {
 
   String content;
 
+  String password;
+
   bool isLocked;
 
   DateTime createdAt;
@@ -19,6 +21,7 @@ class NoteEntity {
       {this.id,
       this.title = '',
       this.content = '',
+      this.password,
       this.isLocked = false,
       this.createdAt,
       this.updatedAt,
@@ -36,6 +39,7 @@ class NoteEntity {
     this.id = map[dbId];
     this.title = map[dbTitle];
     this.content = map[dbContent];
+    this.password = map[dbPassword];
     this.isLocked = map[dbIsLocked] == 1 ? true : false;
     this.createdAt = DateTime.fromMicrosecondsSinceEpoch(map[dbCreatedAt]);
     this.updatedAt = DateTime.fromMicrosecondsSinceEpoch(map[dbUpdatedAt]);
@@ -46,6 +50,7 @@ class NoteEntity {
       '$dbId': this.id,
       '$dbTitle': this.title,
       '$dbContent': this.content,
+      '$dbPassword': this.password,
       '$dbIsLocked': this.isLocked == true ? 1 : 0,
       '$dbCreatedAt': this.createdAt.microsecondsSinceEpoch,
       '$dbUpdatedAt': this.updatedAt.microsecondsSinceEpoch,
@@ -54,6 +59,11 @@ class NoteEntity {
 
   @override
   String toString() {
-    return '{ id: $id, title: $title, content: $content, isLocked: $isLocked, isNew?: $isNew }';
+    return '{ id: $id,'
+        ' title: $title,'
+        ' password: $password,'
+        ' content: $content,'
+        ' isLocked: $isLocked,'
+        ' isNew?: $isNew }';
   }
 }

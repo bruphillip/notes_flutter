@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:notes/redux/actions/note.action.dart';
+import 'package:notes/redux/store/app.store.dart';
 
 class OrderItems extends StatelessWidget {
   @override
@@ -10,53 +13,87 @@ class OrderItems extends StatelessWidget {
           onPressed: () {},
           child: Theme(
             data: ThemeData(cardColor: Colors.black87),
-            child: PopupMenuButton(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Row(
+            child: StoreConnector<NoteState, Function>(
+              converter: (store) => store.dispatch,
+              builder: (context, callback) {
+                return PopupMenuButton<ValueKey>(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text(
-                        'Sort by modified time',
-                        style: TextStyle(
-                            fontFamily: 'Raleway',
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            'Sort by modified time',
+                            style: TextStyle(
+                                fontFamily: 'Raleway',
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          Icon(
+                            Icons.keyboard_arrow_down,
                             color: Colors.white,
-                            fontWeight: FontWeight.w600),
-                      ),
-                      Icon(
-                        Icons.keyboard_arrow_down,
-                        color: Colors.white,
-                      ),
+                          ),
+                        ],
+                      )
                     ],
-                  )
-                ],
-              ),
-              itemBuilder: (context) {
-                return popupMenuBuilder(
-                  [
-                    Text(
-                      'by modified time',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    Text(
-                      'by created time',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    Text(
-                      'A-Z',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    Text(
-                      'Z-A',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ],
+                  ),
+                  onSelected: (ValueKey key) {
+                    if (key.value == FilterBy.byCreated.toString()) {
+                      StoreProvider.of<NoteState>(context)
+                          .dispatch(ByCreatedAction());
+                    }
+                    if (key.value == FilterBy.byModified.toString()) {
+                      StoreProvider.of<NoteState>(context)
+                          .dispatch(ByModifiedAction());
+                    }
+                    if (key.value == FilterBy.Az.toString()) {
+                      StoreProvider.of<NoteState>(context)
+                          .dispatch(ByAzAction());
+                    }
+                    if (key.value == FilterBy.Za.toString()) {
+                      StoreProvider.of<NoteState>(context)
+                          .dispatch(ByZaAction());
+                    }
+                  },
+                  itemBuilder: (context) {
+                    return popupMenuBuilder(
+                      [
+                        Text(
+                          'by modified time',
+                          key: Key(FilterBy.byModified.toString()),
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        Text(
+                          'by created time',
+                          key: Key(FilterBy.byCreated.toString()),
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        Text(
+                          'A-Z',
+                          key: Key(FilterBy.Az.toString()),
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        Text(
+                          'Z-A',
+                          key: Key(FilterBy.Za.toString()),
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ],
+                    );
+                  },
                 );
               },
             ),
           )),
     );
   }
+}
+
+enum FilterBy {
+  byModified,
+  byCreated,
+  Az,
+  Za,
 }
 
 List<PopupMenuEntry<dynamic>> popupMenuBuilder(List<Widget> items) {

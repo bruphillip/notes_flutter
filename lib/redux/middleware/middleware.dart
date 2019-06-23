@@ -5,17 +5,11 @@ import 'package:notes/schemas/note.schema.dart';
 import 'package:redux/redux.dart';
 
 final List<Middleware<NoteState>> combineMiddleware = [
-  TypedMiddleware<NoteState, NoteState>(initialState),
+  TypedMiddleware<NoteState, FetchNotesAction>(fetchNotesMiddleware),
   TypedMiddleware<NoteState, AddNoteAction>(addMiddleware),
-  TypedMiddleware<NoteState, UpdateNoteAction>(midFunction),
+  TypedMiddleware<NoteState, UpdateNoteAction>(updateMiddleware),
+  TypedMiddleware<NoteState, RemoveNoteAction>(deleteMiddleware),
 ];
-
-void initialState(Store<NoteState> store, action, NextDispatcher next) {
-  print('WTF???');
-  print('Store: ${store.state}');
-  print('Action??: $action');
-  print('End');
-}
 
 void addMiddleware(
     Store<NoteState> store, AddNoteAction action, NextDispatcher next) async {
@@ -28,16 +22,32 @@ void addMiddleware(
   next(AddNoteAction(note));
 }
 
-midFunction(Store<NoteState> store, action, NextDispatcher next) async {
-  print('Heello!! store: $store');
+void updateMiddleware(Store<NoteState> store, UpdateNoteAction action,
+    NextDispatcher next) async {
+  print('Update Middleware');
 
-  print('Hellou action! : $action');
+  NoteSchema schema = NoteSchema();
+  action.item.updatedAt = DateTime.now();
 
-  await Future.delayed(Duration(seconds: 1), () {
-    print('awaiting');
-  });
-
-  print('finished');
+  await schema.update(action.item);
 
   next(action);
+}
+
+void deleteMiddleware(Store<NoteState> store, RemoveNoteAction action,
+    NextDispatcher next) async {
+  print('Delete Middleware');
+
+  NoteSchema schema = NoteSchema();
+  await schema.delete(action.index);
+
+  next(action);
+}
+
+void fetchNotesMiddleware(Store<NoteState> store, FetchNotesAction action,
+    NextDispatcher next) async {
+  print('hey there!');
+  NoteSchema schema = NoteSchema();
+  var items = await schema.getAll();
+  next(FetchNotesAction(items: items));
 }

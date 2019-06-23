@@ -1,19 +1,18 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
-import 'package:notes/redux/store.dart';
-import 'package:notes/ui/screen/Home.dart';
-import 'package:notes/ui/screen/NotePage.dart';
+import 'package:notes/ui/bootstrap.dart';
+import 'package:catcher/catcher_plugin.dart';
 
 void main() async {
-  runApp(StoreProvider(
-    store: await createStore(),
-    child: MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Notes',
-      home: Home(),
-      routes: <String, WidgetBuilder>{
-        '/NotePage': (BuildContext context) => NotePage(),
-      },
-    ),
-  ));
+  CatcherOptions debugOptions =
+      CatcherOptions(DialogReportMode(), [ConsoleHandler()]);
+
+  CatcherOptions profileOptions = CatcherOptions(
+    NotificationReportMode(),
+    [ConsoleHandler(), ToastHandler()],
+    handlerTimeout: 10000,
+  );
+
+  Catcher(await boostrap(),
+      debugConfig: debugOptions, profileConfig: profileOptions);
+
+  // Chain.capture(() => runZoned(() async => runApp(await boostrap())));
 }

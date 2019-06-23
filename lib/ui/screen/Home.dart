@@ -3,7 +3,12 @@ import 'package:notes/models/NoteEntity.dart';
 import 'package:notes/ui/components/ActionButton.dart';
 import 'package:notes/ui/components/NotesContainer.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,7 +1,5 @@
 import 'package:notes/models/NoteEntity.dart';
 
-enum Actions { AddNoteAction, RemoveNoteAction, UpdateNoteAction }
-
 class AddNoteAction {
   final NoteEntity item;
   AddNoteAction(this.item);
@@ -16,3 +14,16 @@ class UpdateNoteAction {
   final NoteEntity item;
   UpdateNoteAction(this.item);
 }
+
+class FetchNotesAction {
+  final List<NoteEntity> items;
+  FetchNotesAction({this.items});
+}
+
+class ByModifiedAction {}
+
+class ByCreatedAction {}
+
+class ByAzAction {}
+
+class ByZaAction {}

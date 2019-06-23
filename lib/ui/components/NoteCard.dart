@@ -2,18 +2,61 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:notes/models/NoteEntity.dart';
+import 'package:notes/ui/components/Password.dart';
 
-class NoteCard extends StatelessWidget {
+import 'InheritedPassword.dart';
+
+class NoteCard extends StatefulWidget {
   final NoteEntity note;
 
   NoteCard({this.note}) : assert(note != null);
 
   @override
+  _NoteCardState createState() => _NoteCardState(note: note);
+}
+
+class _NoteCardState extends State<NoteCard> {
+  _NoteCardState({this.note});
+  final NoteEntity note;
+  bool _isValidPassword;
+
+  void _onSubmmitPassword(String password) {
+    if (password == this.widget.note.password)
+      _isValidPassword = true;
+    else
+      _isValidPassword = false;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FlatButton(
       splashColor: Colors.purpleAccent,
-      onPressed: () {
-        Navigator.of(context).pushNamed('/NotePage', arguments: this.note);
+      onPressed: () async {
+        if (this.widget.note.password != null) {
+          await showDialog(
+              context: context,
+              builder: (context) {
+                return InhreritedPassword(
+                    onSubmmitPassword: _onSubmmitPassword, child: Password());
+              });
+          if (_isValidPassword == null)
+            return;
+          else if (_isValidPassword) {
+            Navigator.of(context)
+                .pushNamed('/NotePage', arguments: this.widget.note);
+          } else {
+            Scaffold.of(context).showSnackBar(SnackBar(
+              backgroundColor: Colors.black54,
+              duration: Duration(seconds: 2),
+              content: Container(
+                child: Text('Invalid password :('),
+              ),
+            ));
+          }
+        } else {
+          Navigator.of(context)
+              .pushNamed('/NotePage', arguments: this.widget.note);
+        }
       },
       padding: EdgeInsets.all(0),
       child: Container(
@@ -32,14 +75,14 @@ class NoteCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
-              this.note.title,
+              this.widget.note.title,
               style: TextStyle(
                   fontFamily: 'Raleway',
                   color: Colors.white,
                   fontWeight: FontWeight.w600),
             ),
             Text(
-              _dateFormmater(this.note.updatedAt),
+              _dateFormmater(this.widget.note.updatedAt),
               style: TextStyle(
                   color: Colors.white,
                   fontFamily: 'Raleway',
