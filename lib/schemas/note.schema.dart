@@ -9,7 +9,7 @@ class NoteSchema {
 
     List<Map> maps = await db.query(
       dbName,
-      columns: [dbId, dbTitle, dbContent, dbCreatedAt, dbUpdatedAt],
+      columns: [dbId, dbTitle, dbContent, dbPassword, dbCreatedAt, dbUpdatedAt],
       where: '$dbId = ?',
       whereArgs: [id],
     );
@@ -43,5 +43,17 @@ class NoteSchema {
 
     note.id = await db.insert(dbName, note.toMap());
     return note;
+  }
+
+  Future<int> update(NoteEntity note) async {
+    var db = await dbSchema.db;
+
+    return await db
+        .update(dbName, note.toMap(), where: '$dbId = ?', whereArgs: [note.id]);
+  }
+
+  Future<int> delete(int id) async {
+    var db = await dbSchema.db;
+    return await db.delete(dbName, where: '$dbId = ?', whereArgs: [id]);
   }
 }

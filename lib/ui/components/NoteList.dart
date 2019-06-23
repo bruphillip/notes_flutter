@@ -22,6 +22,7 @@ class _NoteList extends State<NotesList> {
   }
 
   Widget _listNote(List<NoteEntity> notes) {
+    // print(StoreProvider.of<NoteState>(context).state);
     return ListView.builder(
       itemBuilder: (context, index) {
         return NoteCard(

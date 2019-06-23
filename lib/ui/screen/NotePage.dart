@@ -7,7 +7,9 @@ import 'package:notes/models/NoteEntity.dart';
 import 'package:notes/redux/actions/note.action.dart';
 import 'package:notes/redux/store/app.store.dart';
 import 'package:notes/ui/components/CreationNote.dart';
+import 'package:notes/ui/components/InheritedPassword.dart';
 import 'package:notes/ui/components/OrderItems.dart';
+import 'package:notes/ui/components/Password.dart';
 
 class NotePage extends StatefulWidget {
   static const routeName = '/NotePage';
@@ -24,14 +26,9 @@ class _NotePageState extends State<NotePage> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, () {
-      this.setState(() {});
-    });
   }
 
   void _handleInitializing() {
-    print('Note: ${this.note}');
-    print('_isEdditing: ${this._isEdditing}');
     if (this.note.isNew) {
       this.setState(() {
         this._isEdditing = true;
@@ -131,9 +128,21 @@ class _NotePageState extends State<NotePage> {
     note.content = value;
   }
 
-  void _handleLock(Function callback) {}
+  void _handleLock(Function callback) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return InhreritedPassword(
+              onSubmmitPassword: _onSubmmitPassword, child: Password());
+        });
+  }
+
+  void _onSubmmitPassword(String password) {
+    this.note.password = password;
+  }
 
   void _handleDelete(Function callback) {
+    Navigator.of(context).pop();
     callback(RemoveNoteAction(this.note.id));
   }
 }
